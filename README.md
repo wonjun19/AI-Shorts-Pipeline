@@ -39,9 +39,9 @@ python main.py --step video
 **중간 재실행**: 특정 단계만 다시 돌려도 됨. (예: 이미지 교체 후 `--step video`만 재실행)
 
 **상태 파일 저장 위치**:
-- `crawl` / `rank` 단계: `output/pipeline_state.json` (post_id 미확정)
-- `rank` 이후: `output/{post_id}/pipeline_state.json` (post_id 확정 시점부터)
-- 전역 파일(`output/pipeline_state.json`)은 `{"current_post_id": "..."}` 포인터로만 남아 이후 단계 로드에 사용됨
+- `crawl` / `rank` 단계: `output/temp/pipeline_state.json` (post_id 미확정)
+- `script` 이후: `output/{post_id}/pipeline_state.json` (post_id 확정 시점부터)
+- post_id 확정 시 temp 파일은 자동 삭제됨
 
 ---
 
@@ -70,7 +70,7 @@ python main.py --step video
 ## 폴더 구조
 
 ```
-shorts-pipeline/
+AI-Shorts-Pipeline/
 ├── .env                    # API 키 (gitignore)
 ├── .env.example            # 키 양식 예시
 ├── requirements.txt
@@ -83,21 +83,25 @@ shorts-pipeline/
 │
 ├── filter/
 │   ├── __init__.py
-│   └── ranker.py           # 조회수/댓글수 필터링 및 랭킹
+│   ├── ranker.py           # 조회수/댓글수 필터링 및 랭킹
+│   └── test_ranker.py      # ranker 테스트
 │
 ├── script/
 │   ├── __init__.py
-│   └── rewriter.py         # Claude API 각색
+│   ├── rewriter.py         # Claude API 각색
+│   └── test_rewriter.py    # rewriter 테스트
 │
 ├── tts/
 │   ├── __init__.py
-│   └── edge_tts.py         # Microsoft Edge TTS (edge-tts)
+│   ├── edge_tts.py         # Microsoft Edge TTS (edge-tts)
+│   └── test_edge_tts.py    # edge_tts 테스트
 │
 ├── video/
 │   ├── __init__.py
 │   ├── composer.py         # 영상 합성 (FFmpeg)
+│   ├── test_composer.py    # composer 테스트
 │   └── assets/
-│       └── fonts/          # 자막용 폰트 파일 (NanumGothicBold 등)
+│       └── fonts/          # 자막용 폰트 파일 (NanumGothicBold 등, 별도 설치 필요)
 │
 └── output/                 # 최종 생성 영상 저장 (gitignore)
     └── .gitkeep
@@ -387,6 +391,7 @@ python main.py --step video    # FFmpeg 영상 합성
 
 ```
 anthropic
+edge-tts
 playwright
 playwright-stealth
 python-dotenv
