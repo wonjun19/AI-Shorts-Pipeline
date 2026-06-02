@@ -1,0 +1,7 @@
+anthropic
+edge-tts
+playwright
+playwright-stealth
+python-dotenv
+moviepy
+requests
